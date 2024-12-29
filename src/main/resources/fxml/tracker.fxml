@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="pl.magzik.zomboidbooktracker.controller.TrackerController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER">
+
+            <VBox>
+                <Text text="Zomboid" />
+                <Text text="Book" />
+                <Text text="Tracker" />
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Text text="Books:" />
+            <Text text="#" />
+
+        </HBox>
+    </top>
+
+    <center>
+        <VBox>
+            <HBox alignment="CENTER">
+                <ToolBar>
+                    <Button text="+"/>
+                    <Button text="-"/>
+                    <Button text="I"/>
+                    <Button text="E"/>
+                </ToolBar>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label text="S"/>
+                <TextField/>
+            </HBox>
+
+            <TableView VBox.vgrow="ALWAYS"
+                       fx:id="bookTable">
+
+                <columns>
+
+                    <TableColumn fx:id="selectColumn"/>
+
+                    <TableColumn fx:id="nameColumn"/>
+
+                    <TableColumn fx:id="levelOneColumn"/>
+
+                    <TableColumn fx:id="levelTwoColumn"/>
+
+                    <TableColumn fx:id="levelThreeColumn"/>
+
+                    <TableColumn fx:id="levelFourColumn"/>
+
+                    <TableColumn fx:id="levelFiveColumn"/>
+
+                </columns>
+
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
