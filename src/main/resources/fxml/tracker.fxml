@@ -29,7 +29,8 @@
         <VBox>
             <HBox alignment="CENTER">
                 <ToolBar>
-                    <Button text="+"/>
+                    <Button text="+"
+                            onAction="#handleAdd"/>
                     <Button text="-"/>
                     <Button text="I"/>
                     <Button text="E"/>
