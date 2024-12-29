@@ -55,12 +55,21 @@ public class TrackerController {
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-//      ####
-        levelOneColumn.setCellValueFactory(p -> p.getValue().getLevel().get(0));
-        levelOneColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelOneColumn));
-//      ####
+        int n = 0;
+
+        initializeLevel(levelOneColumn, n++);
+        initializeLevel(levelTwoColumn, n++);
+        initializeLevel(levelThreeColumn, n++);
+        initializeLevel(levelFourColumn, n++);
+        initializeLevel(levelFiveColumn, n++);
 
         bookTable.setItems(model.getBooks());
+
+    }
+
+    private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
+        levelColumn.setCellValueFactory(p -> p.getValue().getLevel().get(n));
+        levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
 
     }
 
