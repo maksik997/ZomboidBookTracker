@@ -1,5 +1,6 @@
 package pl.magzik.zomboidbooktracker.service;
 
+import pl.magzik.zomboidbooktracker.model.BookTableModel;
 import pl.magzik.zomboidbooktracker.model.TrackerModel;
 
 public class TrackerService {
@@ -14,7 +15,8 @@ public class TrackerService {
      * This method should: add new book to the model class.
      * */
     public void addBook(String name) {
-        // PLEASE @TCPJaglak implement this method.
+        BookTableModel book = new BookTableModel(name);
+        model.getBooks().add(book);
     }
-
+// PLEASE @TCPJaglak implement this method.
 }

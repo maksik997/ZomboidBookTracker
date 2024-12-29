@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class BookTableModel {
 
@@ -26,6 +27,11 @@ public class BookTableModel {
         level.addAll(
             Arrays.stream(levels).map(SimpleBooleanProperty::new).toList()
         );
+    }
+
+    public BookTableModel(String name) {
+        this(name, false, false, false, false, false);
+
     }
 
     public boolean isSelected() {
@@ -47,4 +53,18 @@ public class BookTableModel {
     public ObservableList<BooleanProperty> getLevel() {
         return level;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookTableModel that = (BookTableModel) o;
+        return Objects.equals(name.get(), that.name.get());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name.get());
+    }
 }
+

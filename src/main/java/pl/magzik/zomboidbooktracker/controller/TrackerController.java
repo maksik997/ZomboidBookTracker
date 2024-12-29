@@ -85,7 +85,11 @@ public class TrackerController {
 
         Optional<String> result = dialog.showAndWait();
 
-        result.ifPresent(service::addBook);
+        if (result.isEmpty()) return;
+        String name = result.get();
+        if (model.getBooks().stream().anyMatch(book -> book.getName().equals(name))) return;
+        if (!name.matches("^[\\w\\d]+$")) return;
+        service.addBook(name);
     }
 
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
