@@ -28,8 +28,6 @@ public class TrackerController {
     public TrackerController() {
         this.model = new TrackerModel();
         this.service = new TrackerService(model);
-
-        service.loadBooks();
     }
 
     @FXML
@@ -64,10 +62,7 @@ public class TrackerController {
 
     @FXML
     public void initialize() {
-        service.loadBooks();
-
-        // TODO: TEMP
-        model.getBooks().add(new BookTableModel("ABCD", true, false, true, false, true));
+        handleLoad();
 
         bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         bookTable.setEditable(true);
@@ -166,6 +161,19 @@ public class TrackerController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error:");
             alert.setHeaderText("Couldn't save data.");
+            alert.setContentText("Because: " + e.getMessage());
+        }
+    }
+
+    private void handleLoad() {
+        try {
+            service.loadBooks();
+        } catch (JAXBException e) {
+            log.error("Couldn't load data, because: {}", e.getMessage(), e);
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error:");
+            alert.setHeaderText("Couldn't load data.");
             alert.setContentText("Because: " + e.getMessage());
         }
     }

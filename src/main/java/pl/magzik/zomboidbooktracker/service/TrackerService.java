@@ -31,10 +31,14 @@ public class TrackerService {
         persistenceHelper.saveData(model.getBooks());
     }
 
-    public void loadBooks() {
+    public void loadBooks() throws JAXBException {
         /* TODO: Implement this: @TCPJaglak
             1. Load books from PersistenceHelper using loadData() method.
             2. Add loaded books to model.
         * */
+
+        List<BookTableModel> list = persistenceHelper.loadData();
+        model.getBooks().clear();
+        model.getBooks().addAll(list);
     }
 }
