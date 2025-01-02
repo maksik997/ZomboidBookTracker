@@ -18,10 +18,6 @@ public class TrackerModel {
     }
 
     public void clearAndAddAll(Collection<BookTableModel> list) {
-        /* TODO: @TCPJaglak,
-        *   1. Clear books list,
-        *   2. Add all elements from given list.
-        *   3. If given list is null, clear books list.*/
         books.clear();
 
         if (list == null) return;

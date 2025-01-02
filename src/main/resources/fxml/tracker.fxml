@@ -36,7 +36,8 @@
                             onAction="#handleRemove"/>
                     <Button text="I"
                             onAction="#handleImport"/>
-                    <Button text="E"/>
+                    <Button text="E"
+                            onAction="#handleExport"/>
                 </ToolBar>
 
                 <Region HBox.hgrow="ALWAYS"/>

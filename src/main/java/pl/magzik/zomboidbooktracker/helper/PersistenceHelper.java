@@ -1,9 +1,6 @@
 package pl.magzik.zomboidbooktracker.helper;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.*;
 import org.xml.sax.SAXException;
 import pl.magzik.zomboidbooktracker.base.PathResolver;
 import pl.magzik.zomboidbooktracker.model.BookDTO;
@@ -48,17 +45,6 @@ public class PersistenceHelper {
         }
     }
 
-    public void saveData(List<BookTableModel> books) throws JAXBException {
-        BookListDTO bookListDTO = new BookListDTO(
-            books.stream()
-              .map(b -> new BookDTO(b.getName(), b.getUnboxedLevels()))
-              .toList()
-        );
-
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(bookListDTO, dataPath.toFile());
-    }
-
     public List<BookTableModel> loadData() throws JAXBException {
         if (!validateFile(dataPath.toFile())) return List.of();
 
@@ -75,8 +61,14 @@ public class PersistenceHelper {
         return unpackData(bookListDTO);
     }
 
-    public void exportData(List<BookTableModel> books) throws JAXBException {
-        // TODO...
+    public void saveData(List<BookTableModel> books) throws JAXBException {
+        marshaller.marshal(packData(books), dataPath.toFile());
+    }
+
+    public void exportData(List<BookTableModel> books, File file) throws JAXBException {
+        if (file.exists() && !file.isFile()) throw new JAXBException("File is not a file.");
+
+        marshaller.marshal(packData(books), file);
     }
 
     private Schema loadSchema() throws SAXException {
@@ -86,6 +78,17 @@ public class PersistenceHelper {
 
     private boolean validateFile(File file) {
         return file.exists() && file.isFile();
+    }
+
+    private BookListDTO packData(List<BookTableModel> books) throws PropertyException {
+        BookListDTO bookListDTO = new BookListDTO(
+                books.stream()
+                        .map(b -> new BookDTO(b.getName(), b.getUnboxedLevels()))
+                        .toList()
+        );
+
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        return bookListDTO;
     }
 
     private List<BookTableModel> unpackData(BookListDTO bookListDTO) {

@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import pl.magzik.zomboidbooktracker.model.TrackerModel;
 import pl.magzik.zomboidbooktracker.service.TrackerService;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,12 +121,13 @@ public class TrackerController {
         handleSave();
     }
 
+    @FXML
     public void handleImport() {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(null); // TODO: SHOULD BE STAGE
 
         if (file == null) {
-            log.warn("No files selected.");
+            log.warn("File not selected.");
             return;
         }
 
@@ -144,8 +147,35 @@ public class TrackerController {
         handleSave();
     }
 
+    @FXML
     public void handleExport() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(null); // TODO: SHOULD BE A STAGE.
 
+        if (file == null) {
+            log.warn("Directory not selected.");
+            return;
+        }
+
+        log.info("Selected directory: {}", file);
+
+        TextInputDialog textInputDialog = new TextInputDialog();
+        textInputDialog.setHeaderText("Enter file name:");
+        textInputDialog.setContentText("Please :)");
+        Optional<String> result = textInputDialog.showAndWait();
+
+        if (result.isPresent()) {
+            file = Paths.get(file.toString(), result.get() + ".xml").toFile();
+            try {
+                service.exportBooks(file);
+            } catch (JAXBException e) {
+                showErrorAlert(
+                    "Couldn't export data from file, because: " + e,
+                    "Couldn't export data.",
+                    "Because: " + e.getMessage()
+                );
+            }
+        }
     }
 
     @FXML
@@ -171,13 +201,6 @@ public class TrackerController {
         try {
             service.saveBooks();
         } catch (JAXBException e) {
-//            log.error("Couldn't save data, because: {}", e.getMessage(), e);
-//
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error:");
-//            alert.setHeaderText("Couldn't save data.");
-//            alert.setContentText("Because: " + e.getMessage());
-
             showErrorAlert(
                 "Couldn't save data, because: " + e,
                 "Couldn't save data.",
@@ -190,13 +213,6 @@ public class TrackerController {
         try {
             service.loadBooks();
         } catch (JAXBException e) {
-
-//            log.error("Couldn't load data, because: {}", e.getMessage(), e);
-//
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error:");
-//            alert.setHeaderText("Couldn't load data.");
-//            alert.setContentText("Because: " + e.getMessage());
             showErrorAlert(
                 "Couldn't load data, because: " + e,
                 "Couldn't load data.",
@@ -207,9 +223,6 @@ public class TrackerController {
     }
 
     private void showErrorAlert(String logMessage, String headerText, String contextText) {
-        /* TODO: @TCPJaglak
-            1. Show error log message with specified logMessage, use ("{}{}" as format string).
-        *   2. Create alert with specified headerText and contextText */
         log.error("{}", logMessage);
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
