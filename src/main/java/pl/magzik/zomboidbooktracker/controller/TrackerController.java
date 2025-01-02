@@ -1,5 +1,6 @@
 package pl.magzik.zomboidbooktracker.controller;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,7 +13,9 @@ import pl.magzik.zomboidbooktracker.model.BookTableModel;
 import pl.magzik.zomboidbooktracker.model.TrackerModel;
 import pl.magzik.zomboidbooktracker.service.TrackerService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TrackerController {
 
@@ -76,6 +79,7 @@ public class TrackerController {
         bookTable.setItems(model.getBooks());
     }
 
+    /* TODO: ADD LOCALIZATION :P */
     @FXML
     public void handleAdd() {
         TextInputDialog dialog = new TextInputDialog();
@@ -87,11 +91,42 @@ public class TrackerController {
 
         if (result.isEmpty()) return;
         String name = result.get();
-        if (model.getBooks().stream().anyMatch(book -> book.getName().equals(name))) return;
-        if (!name.matches("^[\\w\\d]+$")) return;
+
+        if (model.getBooks().contains(new BookTableModel(name))) {
+            return;
+        }
+        if (!name.matches("^\\w+$")) return;
+
         service.addBook(name);
     }
 
+    @FXML
+    public void handleRemove() {
+        List<BookTableModel> list = model.getBooks().filtered(BookTableModel::isSelected);
+        service.removeBooks(list);
+    }
+
+    public void handleImport() {
+
+    }
+
+    public void handleExport() {
+
+    }
+
+    public void handleSearch() {
+
+    }
+
+    public void handleTableUpdate() {
+
+    }
+
+    private void updateElementCount() {
+
+    }
+
+    /* TODO: CHANGE THIS METHOD TO ATTACH CALLBACK LISTENER WHEN USER CLICK CHECKBOX  */
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
         levelColumn.setCellValueFactory(p -> p.getValue().getLevel().get(n));
         levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));

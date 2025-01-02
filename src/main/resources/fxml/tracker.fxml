@@ -31,7 +31,8 @@
                 <ToolBar>
                     <Button text="+"
                             onAction="#handleAdd"/>
-                    <Button text="-"/>
+                    <Button text="-"
+                            onAction="#handleRemove"/>
                     <Button text="I"/>
                     <Button text="E"/>
                 </ToolBar>

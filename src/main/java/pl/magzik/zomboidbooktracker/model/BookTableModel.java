@@ -31,7 +31,6 @@ public class BookTableModel {
 
     public BookTableModel(String name) {
         this(name, false, false, false, false, false);
-
     }
 
     public boolean isSelected() {
