@@ -40,7 +40,8 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <Label text="S"/>
-                <TextField/>
+                <TextField fx:id="searchTextField"
+                        onKeyTyped="#handleSearch"/>
             </HBox>
 
             <TableView VBox.vgrow="ALWAYS"

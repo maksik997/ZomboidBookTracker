@@ -4,6 +4,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,6 +32,9 @@ public class TrackerController {
     }
 
     @FXML
+    private TextField searchTextField;
+
+    @FXML
     private TableView<BookTableModel> bookTable;
 
     @FXML
@@ -53,7 +57,6 @@ public class TrackerController {
 
     @FXML
     private TableColumn<BookTableModel, Boolean> levelFiveColumn;
-
 
     @FXML
     public void initialize() {
@@ -114,8 +117,17 @@ public class TrackerController {
 
     }
 
+    @FXML
     public void handleSearch() {
+        String key = searchTextField.getText();
 
+        if (key.isBlank()) {
+            bookTable.setItems(model.getBooks());
+            return;
+        }
+
+        /* TODO:
+        *   IMPLEMENT TABLE FILTER BY KEY :P @TCPJaglak */
     }
 
     public void handleTableUpdate() {
