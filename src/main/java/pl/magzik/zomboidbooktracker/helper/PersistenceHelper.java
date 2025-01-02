@@ -4,17 +4,25 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import org.xml.sax.SAXException;
 import pl.magzik.zomboidbooktracker.base.PathResolver;
 import pl.magzik.zomboidbooktracker.model.BookDTO;
 import pl.magzik.zomboidbooktracker.model.BookListDTO;
 import pl.magzik.zomboidbooktracker.model.BookTableModel;
 
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 
 public class PersistenceHelper {
 
     private static final String DATA_FILE = "data.xml";
+
+    private static final URL SCHEMA = PersistenceHelper.class.getResource("/books.xsd");
 
     private final Path dataPath;
 
@@ -30,20 +38,21 @@ public class PersistenceHelper {
             JAXBContext context = JAXBContext.newInstance(BookListDTO.class);
             this.marshaller = context.createMarshaller();
             this.unmarshaller = context.createUnmarshaller();
-        } catch (JAXBException e) {
+
+            Schema schema = loadSchema();
+
+            marshaller.setSchema(schema);
+            unmarshaller.setSchema(schema);
+        } catch (JAXBException | SAXException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void exportData(List<BookTableModel> books) throws JAXBException {
-        // TODO...
     }
 
     public void saveData(List<BookTableModel> books) throws JAXBException {
         BookListDTO bookListDTO = new BookListDTO(
             books.stream()
-                  .map(b -> new BookDTO(b.getName(), b.getUnboxedLevels()))
-                  .toList()
+              .map(b -> new BookDTO(b.getName(), b.getUnboxedLevels()))
+              .toList()
         );
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -51,18 +60,40 @@ public class PersistenceHelper {
     }
 
     public List<BookTableModel> loadData() throws JAXBException {
+        if (!validateFile(dataPath.toFile())) return List.of();
+
         BookListDTO bookListDTO = (BookListDTO) unmarshaller.unmarshal(dataPath.toFile());
 
-        /* TODO: VALIDATE THIS DATA MAYBE? */
+        return unpackData(bookListDTO);
+    }
+
+    public List<BookTableModel> importData(File file) throws JAXBException {
+        if (!validateFile(file)) throw new JAXBException("File doesn't exits or is not a file.");
+
+        BookListDTO bookListDTO = (BookListDTO) unmarshaller.unmarshal(file);
+
+        return unpackData(bookListDTO);
+    }
+
+    public void exportData(List<BookTableModel> books) throws JAXBException {
+        // TODO...
+    }
+
+    private Schema loadSchema() throws SAXException {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        return schemaFactory.newSchema(PersistenceHelper.SCHEMA);
+    }
+
+    private boolean validateFile(File file) {
+        return file.exists() && file.isFile();
+    }
+
+    private List<BookTableModel> unpackData(BookListDTO bookListDTO) {
+        if (bookListDTO.getBooks() == null) return null;
 
         return bookListDTO.getBooks().stream()
                 .map(bookDTO -> new BookTableModel(bookDTO.getName(), bookDTO.getLevels()))
                 .toList();
-    }
-
-    public List<BookTableModel> importData() throws JAXBException {
-//        TODO: ...
-        return null;
     }
 
 }

@@ -5,6 +5,7 @@ import pl.magzik.zomboidbooktracker.helper.PersistenceHelper;
 import pl.magzik.zomboidbooktracker.model.BookTableModel;
 import pl.magzik.zomboidbooktracker.model.TrackerModel;
 
+import java.io.File;
 import java.util.List;
 
 public class TrackerService {
@@ -32,13 +33,18 @@ public class TrackerService {
     }
 
     public void loadBooks() throws JAXBException {
-        /* TODO: Implement this: @TCPJaglak
-            1. Load books from PersistenceHelper using loadData() method.
-            2. Add loaded books to model.
-        * */
-
         List<BookTableModel> list = persistenceHelper.loadData();
         model.getBooks().clear();
+
+        if (list == null) return;
+        model.getBooks().addAll(list);
+    }
+
+    public void importBooks(File file) throws JAXBException {
+        List<BookTableModel> list = persistenceHelper.importData(file);
+        model.getBooks().clear();
+
+        if (list == null) return;
         model.getBooks().addAll(list);
     }
 }

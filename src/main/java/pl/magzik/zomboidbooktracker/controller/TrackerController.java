@@ -1,19 +1,21 @@
 package pl.magzik.zomboidbooktracker.controller;
 
 import jakarta.xml.bind.JAXBException;
-import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.magzik.zomboidbooktracker.model.BookTableModel;
 import pl.magzik.zomboidbooktracker.model.TrackerModel;
 import pl.magzik.zomboidbooktracker.service.TrackerService;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,7 +120,25 @@ public class TrackerController {
     }
 
     public void handleImport() {
-        // TODO: ...
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null); // TODO: SHOULD BE STAGE
+
+        if (file == null) {
+            log.warn("No files selected.");
+            return;
+        }
+
+        log.info("Selected file: {}", file);
+
+        try {
+            service.importBooks(file);
+        } catch (JAXBException e) {
+            showErrorAlert(
+            "Couldn't import books from file" + file + " because: ",
+            "Couldn't import books from file.",
+            "Bad format."
+            );
+        }
 
         updateElementCount();
         handleSave();
@@ -140,11 +160,6 @@ public class TrackerController {
         ObservableList<BookTableModel> list = model.getBooks()
                 .filtered(b -> b.getName().contains(key));
         bookTable.setItems(list);
-    }
-
-    public void handleTableUpdate() {
-
-        handleSave();
     }
 
     private void updateElementCount() {
@@ -178,10 +193,31 @@ public class TrackerController {
         }
     }
 
-    /* TODO: CHANGE THIS METHOD TO ATTACH CALLBACK LISTENER WHEN USER CLICK CHECKBOX  */
+    private void showErrorAlert(String logMessage, String headerText, String contextText) {
+        /* TODO: @TCPJaglak
+            1. Show error log message with specified logMessage, use ("{}{}" as format string).
+        *   2. Create alert with specified headerText and contextText */
+    }
+
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
         levelColumn.setCellValueFactory(p -> p.getValue().getLevels().get(n));
         levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
+
+        levelColumn.setCellFactory(column -> {
+            CheckBoxTableCell<BookTableModel, Boolean> cell = new CheckBoxTableCell<>();
+
+            cell.setSelectedStateCallback(idx -> {
+                BookTableModel book = column.getTableView().getItems().get(idx);
+                BooleanProperty property = book.getLevels().get(n);
+
+                property.addListener((obs, oldValue, newValue) -> handleSave());
+
+                return property;
+            });
+
+            return cell;
+        });
+
     }
 
 }
