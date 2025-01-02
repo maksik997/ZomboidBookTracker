@@ -152,6 +152,9 @@ public class TrackerController {
          *  2. Assign book count to bookCountText field.
          *  Implement this: @TCPJaglak
          * */
+        int size = model.getBooks().size();
+
+        bookCountText.setText(String.valueOf(size));
     }
 
     /* TODO: CHANGE THIS METHOD TO ATTACH CALLBACK LISTENER WHEN USER CLICK CHECKBOX  */
