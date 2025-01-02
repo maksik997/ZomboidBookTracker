@@ -17,9 +17,8 @@ public class TrackerService {
         BookTableModel book = new BookTableModel(name);
         model.getBooks().add(book);
     }
-
-    /* TODO: IMPLEMENT BOOK REMOVER @TCPJag lak */
+    
     public void removeBooks(List<BookTableModel> list) {
-
+        model.getBooks().removeAll(list);
     }
 }
