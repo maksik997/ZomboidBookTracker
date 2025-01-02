@@ -1,7 +1,6 @@
 package pl.magzik.zomboidbooktracker.controller;
 
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -9,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.magzik.zomboidbooktracker.model.BookTableModel;
@@ -17,7 +17,6 @@ import pl.magzik.zomboidbooktracker.service.TrackerService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class TrackerController {
 
@@ -31,6 +30,9 @@ public class TrackerController {
         this.model = new TrackerModel();
         this.service = new TrackerService(model);
     }
+
+    @FXML
+    private Text bookCountText;
 
     @FXML
     private TextField searchTextField;
@@ -81,6 +83,8 @@ public class TrackerController {
         initializeLevel(levelFiveColumn, n);
 
         bookTable.setItems(model.getBooks());
+
+        updateElementCount();
     }
 
     /* TODO: ADD LOCALIZATION :P */
@@ -102,16 +106,22 @@ public class TrackerController {
         if (!name.matches("^\\w+$")) return;
 
         service.addBook(name);
+
+        updateElementCount();
     }
 
     @FXML
     public void handleRemove() {
         List<BookTableModel> list = model.getBooks().filtered(BookTableModel::isSelected);
         service.removeBooks(list);
+
+        updateElementCount();
     }
 
     public void handleImport() {
+        // TODO: ...
 
+        updateElementCount();
     }
 
     public void handleExport() {
@@ -127,9 +137,8 @@ public class TrackerController {
             return;
         }
 
-        /* TODO:
-        *   IMPLEMENT TABLE FILTER BY KEY :P @TCPJaglak */
-        ObservableList<BookTableModel> list = model.getBooks().filtered(b -> b.getName().contains(key));
+        ObservableList<BookTableModel> list = model.getBooks()
+                .filtered(b -> b.getName().contains(key));
         bookTable.setItems(list);
     }
 
@@ -138,7 +147,11 @@ public class TrackerController {
     }
 
     private void updateElementCount() {
-
+        /* TODO:
+         *  1. Get book count
+         *  2. Assign book count to bookCountText field.
+         *  Implement this: @TCPJaglak
+         * */
     }
 
     /* TODO: CHANGE THIS METHOD TO ATTACH CALLBACK LISTENER WHEN USER CLICK CHECKBOX  */

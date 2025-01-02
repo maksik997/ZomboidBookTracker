@@ -20,7 +20,8 @@
             <Region HBox.hgrow="ALWAYS" />
 
             <Text text="Books:" />
-            <Text text="#" />
+            <Text text="#"
+                  fx:id="bookCountText"/>
 
         </HBox>
     </top>
