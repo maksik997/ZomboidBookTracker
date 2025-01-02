@@ -34,17 +34,19 @@ public class TrackerService {
 
     public void loadBooks() throws JAXBException {
         List<BookTableModel> list = persistenceHelper.loadData();
-        model.getBooks().clear();
-
-        if (list == null) return;
-        model.getBooks().addAll(list);
+//        model.getBooks().clear();
+//
+//        if (list == null) return;
+//        model.getBooks().addAll(list);
+        model.clearAndAddAll(list) ;
     }
 
     public void importBooks(File file) throws JAXBException {
         List<BookTableModel> list = persistenceHelper.importData(file);
-        model.getBooks().clear();
-
-        if (list == null) return;
-        model.getBooks().addAll(list);
+//        model.getBooks().clear();
+//
+//        if (list == null) return;
+//        model.getBooks().addAll(list);
+        model.clearAndAddAll(list) ;
     }
 }

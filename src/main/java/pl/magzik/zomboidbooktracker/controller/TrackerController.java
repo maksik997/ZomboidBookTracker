@@ -134,7 +134,7 @@ public class TrackerController {
             service.importBooks(file);
         } catch (JAXBException e) {
             showErrorAlert(
-            "Couldn't import books from file" + file + " because: ",
+            "Couldn't import books from file" + file + " because: " + e,
             "Couldn't import books from file.",
             "Bad format."
             );
@@ -171,12 +171,18 @@ public class TrackerController {
         try {
             service.saveBooks();
         } catch (JAXBException e) {
-            log.error("Couldn't save data, because: {}", e.getMessage(), e);
+//            log.error("Couldn't save data, because: {}", e.getMessage(), e);
+//
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error:");
+//            alert.setHeaderText("Couldn't save data.");
+//            alert.setContentText("Because: " + e.getMessage());
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error:");
-            alert.setHeaderText("Couldn't save data.");
-            alert.setContentText("Because: " + e.getMessage());
+            showErrorAlert(
+                "Couldn't save data, because: " + e,
+                "Couldn't save data.",
+                "Because: " + e.getMessage()
+            );
         }
     }
 
@@ -184,19 +190,33 @@ public class TrackerController {
         try {
             service.loadBooks();
         } catch (JAXBException e) {
-            log.error("Couldn't load data, because: {}", e.getMessage(), e);
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error:");
-            alert.setHeaderText("Couldn't load data.");
-            alert.setContentText("Because: " + e.getMessage());
+//            log.error("Couldn't load data, because: {}", e.getMessage(), e);
+//
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error:");
+//            alert.setHeaderText("Couldn't load data.");
+//            alert.setContentText("Because: " + e.getMessage());
+            showErrorAlert(
+                "Couldn't load data, because: " + e,
+                "Couldn't load data.",
+                "Because: " + e.getMessage()
+            );
         }
+
     }
 
     private void showErrorAlert(String logMessage, String headerText, String contextText) {
         /* TODO: @TCPJaglak
             1. Show error log message with specified logMessage, use ("{}{}" as format string).
         *   2. Create alert with specified headerText and contextText */
+        log.error("{}", logMessage);
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error:");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contextText);
+        alert.showAndWait();
     }
 
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
