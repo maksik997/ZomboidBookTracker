@@ -1,11 +1,10 @@
 package pl.magzik.zomboidbooktracker.controller;
 
+import jakarta.xml.bind.JAXBException;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
@@ -29,6 +28,8 @@ public class TrackerController {
     public TrackerController() {
         this.model = new TrackerModel();
         this.service = new TrackerService(model);
+
+        service.loadBooks();
     }
 
     @FXML
@@ -63,6 +64,7 @@ public class TrackerController {
 
     @FXML
     public void initialize() {
+        service.loadBooks();
 
         // TODO: TEMP
         model.getBooks().add(new BookTableModel("ABCD", true, false, true, false, true));
@@ -108,6 +110,7 @@ public class TrackerController {
         service.addBook(name);
 
         updateElementCount();
+        handleSave();
     }
 
     @FXML
@@ -116,12 +119,14 @@ public class TrackerController {
         service.removeBooks(list);
 
         updateElementCount();
+        handleSave();
     }
 
     public void handleImport() {
         // TODO: ...
 
         updateElementCount();
+        handleSave();
     }
 
     public void handleExport() {
@@ -144,22 +149,30 @@ public class TrackerController {
 
     public void handleTableUpdate() {
 
+        handleSave();
     }
 
     private void updateElementCount() {
-        /* TODO:
-         *  1. Get book count
-         *  2. Assign book count to bookCountText field.
-         *  Implement this: @TCPJaglak
-         * */
         int size = model.getBooks().size();
-
         bookCountText.setText(String.valueOf(size));
+    }
+
+    private void handleSave() {
+        try {
+            service.saveBooks();
+        } catch (JAXBException e) {
+            log.error("Couldn't save data, because: {}", e.getMessage(), e);
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error:");
+            alert.setHeaderText("Couldn't save data.");
+            alert.setContentText("Because: " + e.getMessage());
+        }
     }
 
     /* TODO: CHANGE THIS METHOD TO ATTACH CALLBACK LISTENER WHEN USER CLICK CHECKBOX  */
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
-        levelColumn.setCellValueFactory(p -> p.getValue().getLevel().get(n));
+        levelColumn.setCellValueFactory(p -> p.getValue().getLevels().get(n));
         levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
     }
 

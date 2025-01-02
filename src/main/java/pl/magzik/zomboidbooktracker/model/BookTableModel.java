@@ -4,10 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class BookTableModel {
@@ -16,17 +18,19 @@ public class BookTableModel {
 
     private final StringProperty name;
 
-    private final ObservableList<BooleanProperty> level;
+    private final ObservableList<BooleanProperty> levels;
 
-    public BookTableModel(String name, Boolean... levels) {
-        if (levels.length != 5) throw new IllegalArgumentException("Level length must be 5");
+    public BookTableModel(String name, List<Boolean> levels) {
+        if (levels.size() != 5) throw new IllegalArgumentException("Level length must be 5");
 
         this.selected = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(name);
-        this.level = FXCollections.observableArrayList();
-        level.addAll(
-            Arrays.stream(levels).map(SimpleBooleanProperty::new).toList()
-        );
+        this.levels = FXCollections.observableArrayList();
+        this.levels.addAll(levels.stream().map(SimpleBooleanProperty::new).toList());
+    }
+
+    public BookTableModel(String name, Boolean... levels) {
+        this(name, Arrays.asList(levels));
     }
 
     public BookTableModel(String name) {
@@ -49,8 +53,14 @@ public class BookTableModel {
         return name;
     }
 
-    public ObservableList<BooleanProperty> getLevel() {
-        return level;
+    public ObservableList<BooleanProperty> getLevels() {
+        return levels;
+    }
+
+    public List<Boolean> getUnboxedLevels() {
+        return levels.stream()
+                      .map(ObservableBooleanValue::get)
+                      .toList();
     }
 
     @Override
