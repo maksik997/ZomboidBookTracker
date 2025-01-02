@@ -1,5 +1,6 @@
 package pl.magzik.zomboidbooktracker.controller;
 
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -128,6 +129,8 @@ public class TrackerController {
 
         /* TODO:
         *   IMPLEMENT TABLE FILTER BY KEY :P @TCPJaglak */
+        ObservableList<BookTableModel> list = model.getBooks().filtered(b -> b.getName().contains(key));
+        bookTable.setItems(list);
     }
 
     public void handleTableUpdate() {

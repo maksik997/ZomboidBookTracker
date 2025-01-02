@@ -17,7 +17,7 @@ public class TrackerService {
         BookTableModel book = new BookTableModel(name);
         model.getBooks().add(book);
     }
-    
+
     public void removeBooks(List<BookTableModel> list) {
         model.getBooks().removeAll(list);
     }
