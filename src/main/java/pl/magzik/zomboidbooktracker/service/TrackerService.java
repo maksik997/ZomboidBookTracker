@@ -21,6 +21,7 @@ public class TrackerService {
 
     public void addBook(String name) {
         BookTableModel book = new BookTableModel(name);
+        if (model.getBooks().contains(book)) return;
         model.getBooks().add(book);
     }
 

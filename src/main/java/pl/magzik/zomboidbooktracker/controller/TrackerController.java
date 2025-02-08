@@ -4,7 +4,9 @@ import jakarta.xml.bind.JAXBException;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
@@ -19,9 +21,8 @@ import pl.magzik.zomboidbooktracker.service.TrackerService;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
-public class TrackerController {
+public class TrackerController extends Controller {
 
     private static final Logger log = LoggerFactory.getLogger(TrackerController.class);
 
@@ -70,11 +71,14 @@ public class TrackerController {
 
         bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         bookTable.setEditable(true);
+        bookTable.setSelectionModel(null);
 
         selectColumn.setCellValueFactory(p -> p.getValue().selectedProperty());
         selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
+        selectColumn.setReorderable(false);
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setReorderable(false);
 
         int n = 0;
         initializeLevel(levelOneColumn, n++);
@@ -88,26 +92,11 @@ public class TrackerController {
         updateElementCount();
     }
 
-    /* TODO: ADD LOCALIZATION :P */
     @FXML
     public void handleAdd() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter a book name:");
-        dialog.setHeaderText("Enter a book name pwetty please:");
-        dialog.setContentText("Book name:");
-
-        Optional<String> result = dialog.showAndWait();
-
-        if (result.isEmpty()) return;
-        String name = result.get();
-
-        if (model.getBooks().contains(new BookTableModel(name))) {
-            return;
-        }
-        if (!name.matches("^\\w+$")) return;
-
+        String name = showInputDialog("Input:", "Enter a book name pwetty please:", "Book name:");
+        if (name.isEmpty() || !name.matches("^[\\d\\p{L} ]+$")) return;
         service.addBook(name);
-
         updateElementCount();
         handleSave();
     }
@@ -116,7 +105,6 @@ public class TrackerController {
     public void handleRemove() {
         List<BookTableModel> list = model.getBooks().filtered(BookTableModel::isSelected);
         service.removeBooks(list);
-
         updateElementCount();
         handleSave();
     }
@@ -124,14 +112,8 @@ public class TrackerController {
     @FXML
     public void handleImport() {
         FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(null); // TODO: SHOULD BE STAGE
-
-        if (file == null) {
-            log.warn("File not selected.");
-            return;
-        }
-
-        log.info("Selected file: {}", file);
+        File file = fileChooser.showOpenDialog(getStage());
+        if (!validateFile(file)) return;
 
         try {
             service.importBooks(file);
@@ -150,22 +132,13 @@ public class TrackerController {
     @FXML
     public void handleExport() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File file = directoryChooser.showDialog(null); // TODO: SHOULD BE A STAGE.
+        File file = directoryChooser.showDialog(getStage());
+        if (!validateFile(file)) return;
 
-        if (file == null) {
-            log.warn("Directory not selected.");
-            return;
-        }
+        String filename = showInputDialog("Input:", "Enter file name:", "Please :)");
 
-        log.info("Selected directory: {}", file);
-
-        TextInputDialog textInputDialog = new TextInputDialog();
-        textInputDialog.setHeaderText("Enter file name:");
-        textInputDialog.setContentText("Please :)");
-        Optional<String> result = textInputDialog.showAndWait();
-
-        if (result.isPresent()) {
-            file = Paths.get(file.toString(), result.get() + ".xml").toFile();
+        if (!filename.isEmpty()) {
+            file = Paths.get(file.toString(), filename + ".xml").toFile();
             try {
                 service.exportBooks(file);
             } catch (JAXBException e) {
@@ -181,20 +154,13 @@ public class TrackerController {
     @FXML
     public void handleSearch() {
         String key = searchTextField.getText();
-
         if (key.isBlank()) {
             bookTable.setItems(model.getBooks());
             return;
         }
-
         ObservableList<BookTableModel> list = model.getBooks()
                 .filtered(b -> b.getName().contains(key));
         bookTable.setItems(list);
-    }
-
-    private void updateElementCount() {
-        int size = model.getBooks().size();
-        bookCountText.setText(String.valueOf(size));
     }
 
     private void handleSave() {
@@ -219,23 +185,16 @@ public class TrackerController {
                 "Because: " + e.getMessage()
             );
         }
-
     }
 
-    private void showErrorAlert(String logMessage, String headerText, String contextText) {
-        log.error("{}", logMessage);
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error:");
-        alert.setHeaderText(headerText);
-        alert.setContentText(contextText);
-        alert.showAndWait();
+    private void updateElementCount() {
+        int size = model.getBooks().size();
+        bookCountText.setText(String.valueOf(size));
     }
 
     private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
         levelColumn.setCellValueFactory(p -> p.getValue().getLevels().get(n));
         levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
-
         levelColumn.setCellFactory(column -> {
             CheckBoxTableCell<BookTableModel, Boolean> cell = new CheckBoxTableCell<>();
 
@@ -247,10 +206,14 @@ public class TrackerController {
 
                 return property;
             });
-
             return cell;
         });
-
+        levelColumn.setReorderable(false);
     }
 
+    private boolean validateFile(File file) {
+        if (file == null) log.warn("File not selected.");
+        else log.info("Selected file: {}", file);
+        return file != null;
+    }
 }

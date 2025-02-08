@@ -3,68 +3,98 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="pl.magzik.zomboidbooktracker.controller.TrackerController"
             prefHeight="600.0" prefWidth="800.0">
 
     <top>
-        <HBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER" styleClass="header">
 
             <VBox>
                 <Text text="Zomboid" />
-                <Text text="Book" />
-                <Text text="Tracker" />
+                <Text text="Book" styleClass="head-1"/>
+                <Text text="Tracker" styleClass="head-2"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <Text text="Books:" />
+            <Label text="#" styleClass="head-book">
+                <graphic>
+                    <FontIcon iconLiteral="fas-book:28"/>
+                </graphic>
+            </Label>
             <Text text="#"
+                  styleClass="head-book"
                   fx:id="bookCountText"/>
 
         </HBox>
     </top>
 
     <center>
-        <VBox>
-            <HBox alignment="CENTER">
+        <VBox styleClass="main">
+            <HBox alignment="CENTER" styleClass="toolbox">
                 <ToolBar>
-                    <Button text="+"
-                            onAction="#handleAdd"/>
-                    <Button text="-"
-                            onAction="#handleRemove"/>
-                    <Button text="I"
-                            onAction="#handleImport"/>
-                    <Button text="E"
-                            onAction="#handleExport"/>
+                    <Button focusTraversable="false"
+                            onAction="#handleAdd">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-plus-square"/>
+                        </graphic>
+                    </Button>
+                    <Button focusTraversable="false"
+                            onAction="#handleRemove">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-minus-square"/>
+                        </graphic>
+                    </Button>
+                    <Button focusTraversable="false"
+                            onAction="#handleImport">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-file-import"/>
+                        </graphic>
+                    </Button>
+                    <Button focusTraversable="false"
+                            onAction="#handleExport">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-file-export"/>
+                        </graphic>
+                    </Button>
                 </ToolBar>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <Label text="S"/>
+                <Label text=" ">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-search"/>
+                    </graphic>
+                </Label>
                 <TextField fx:id="searchTextField"
-                        onKeyTyped="#handleSearch"/>
+                           styleClass="search-bar"
+                           focusTraversable="false"
+                           onKeyTyped="#handleSearch"/>
             </HBox>
 
             <TableView VBox.vgrow="ALWAYS"
+                       focusTraversable="false"
                        fx:id="bookTable">
 
                 <columns>
 
                     <TableColumn fx:id="selectColumn"/>
 
-                    <TableColumn fx:id="nameColumn"/>
+                    <TableColumn fx:id="nameColumn"
+                                  text="Book name:"/>
 
-                    <TableColumn fx:id="levelOneColumn"/>
+                    <TableColumn fx:id="levelOneColumn" text="Part 1"/>
 
-                    <TableColumn fx:id="levelTwoColumn"/>
+                    <TableColumn fx:id="levelTwoColumn" text="Part 2"/>
 
-                    <TableColumn fx:id="levelThreeColumn"/>
+                    <TableColumn fx:id="levelThreeColumn" text="Part 3"/>
 
-                    <TableColumn fx:id="levelFourColumn"/>
+                    <TableColumn fx:id="levelFourColumn" text="Part 4"/>
 
-                    <TableColumn fx:id="levelFiveColumn"/>
+                    <TableColumn fx:id="levelFiveColumn" text="Part 5"/>
 
                 </columns>
 

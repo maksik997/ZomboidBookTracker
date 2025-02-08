@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.magzik.zomboidbooktracker.controller.Controller;
 
 import java.net.URL;
 
@@ -28,7 +29,13 @@ public class ZomboidBookTrackerApp extends Application {
         FXMLLoader loader = loadView();
         Parent root = loader.load();
 
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        ((Controller) loader.getController()).setStage(stage);
+
+        URL stylesUrl = getClass().getResource("/styles.css");
+        assert stylesUrl != null;
+        scene.getStylesheets().add(stylesUrl.toExternalForm());
 
         stage.setTitle("Zomboid Book Tracker");
         stage.show();

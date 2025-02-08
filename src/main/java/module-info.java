@@ -3,6 +3,7 @@ module pl.magzik.zomboidbooktracker {
     requires javafx.fxml;
 
     requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.fontawesome5;
     requires org.slf4j;
     requires java.desktop;
     requires jakarta.xml.bind;

@@ -4,7 +4,7 @@
 
     <xs:complexType name="BookListDTO">
         <xs:sequence>
-            <xs:element name="book" type="BookDTO" maxOccurs="unbounded"/>
+            <xs:element name="book" type="BookDTO" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
