@@ -99,7 +99,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>pl.magzik.zomboidbooktracker/pl.magzik.zomboidbooktracker.ZomboidBookTrackerApp</mainClass>
+                            <mainClass>pl.magzik.zomboidbooktracker.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
