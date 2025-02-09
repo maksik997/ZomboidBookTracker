@@ -67,18 +67,15 @@ public class TrackerController extends Controller {
 
     @FXML
     public void initialize() {
+        log.info("Initializing Tracker...");
         handleLoad();
 
         bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         bookTable.setEditable(true);
         bookTable.setSelectionModel(null);
-
         selectColumn.setCellValueFactory(p -> p.getValue().selectedProperty());
         selectColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectColumn));
-        selectColumn.setReorderable(false);
-
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        nameColumn.setReorderable(false);
 
         int n = 0;
         initializeLevel(levelOneColumn, n++);
@@ -88,13 +85,31 @@ public class TrackerController extends Controller {
         initializeLevel(levelFiveColumn, n);
 
         bookTable.setItems(model.getBooks());
-
         updateElementCount();
+
+        log.info("Tracker initialized.");
+    }
+
+    private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
+        levelColumn.setCellValueFactory(p -> p.getValue().getLevels().get(n));
+        levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
+        levelColumn.setCellFactory(column -> {
+            CheckBoxTableCell<BookTableModel, Boolean> cell = new CheckBoxTableCell<>();
+            cell.setSelectedStateCallback(idx -> {
+                BookTableModel book = column.getTableView().getItems().get(idx);
+                BooleanProperty property = book.getLevels().get(n);
+
+                property.addListener((obs, oldValue, newValue) -> handleSave());
+
+                return property;
+            });
+            return cell;
+        });
     }
 
     @FXML
     public void handleAdd() {
-        String name = showInputDialog("Input:", "Enter a book name pwetty please:", "Book name:");
+        String name = showInputDialog("Enter a book name pwetty please:", "Book name:");
         if (name.isEmpty() || !name.matches("^[\\d\\p{L} ]+$")) return;
         service.addBook(name);
         updateElementCount();
@@ -113,7 +128,7 @@ public class TrackerController extends Controller {
     public void handleImport() {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(getStage());
-        if (!validateFile(file)) return;
+        if (isFileNotSelected(file)) return;
 
         try {
             service.importBooks(file);
@@ -133,9 +148,9 @@ public class TrackerController extends Controller {
     public void handleExport() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(getStage());
-        if (!validateFile(file)) return;
+        if (isFileNotSelected(file)) return;
 
-        String filename = showInputDialog("Input:", "Enter file name:", "Please :)");
+        String filename = showInputDialog("Enter file name:", "Please :)");
 
         if (!filename.isEmpty()) {
             file = Paths.get(file.toString(), filename + ".xml").toFile();
@@ -192,28 +207,9 @@ public class TrackerController extends Controller {
         bookCountText.setText(String.valueOf(size));
     }
 
-    private void initializeLevel(TableColumn<BookTableModel, Boolean> levelColumn, int n) {
-        levelColumn.setCellValueFactory(p -> p.getValue().getLevels().get(n));
-        levelColumn.setCellFactory(CheckBoxTableCell.forTableColumn(levelColumn));
-        levelColumn.setCellFactory(column -> {
-            CheckBoxTableCell<BookTableModel, Boolean> cell = new CheckBoxTableCell<>();
-
-            cell.setSelectedStateCallback(idx -> {
-                BookTableModel book = column.getTableView().getItems().get(idx);
-                BooleanProperty property = book.getLevels().get(n);
-
-                property.addListener((obs, oldValue, newValue) -> handleSave());
-
-                return property;
-            });
-            return cell;
-        });
-        levelColumn.setReorderable(false);
-    }
-
-    private boolean validateFile(File file) {
+    private boolean isFileNotSelected(File file) {
         if (file == null) log.warn("File not selected.");
         else log.info("Selected file: {}", file);
-        return file != null;
+        return file == null;
     }
 }

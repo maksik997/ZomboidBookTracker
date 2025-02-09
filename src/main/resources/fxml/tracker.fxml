@@ -41,36 +41,53 @@
                         <graphic>
                             <FontIcon iconLiteral="fas-plus-square"/>
                         </graphic>
+
+                        <tooltip>
+                            <Tooltip text="Add a book to the library"/>
+                        </tooltip>
                     </Button>
                     <Button focusTraversable="false"
                             onAction="#handleRemove">
                         <graphic>
                             <FontIcon iconLiteral="fas-minus-square"/>
                         </graphic>
+
+                        <tooltip>
+                            <Tooltip text="Remove selected book[s] from the library"/>
+                        </tooltip>
                     </Button>
                     <Button focusTraversable="false"
                             onAction="#handleImport">
                         <graphic>
                             <FontIcon iconLiteral="fas-file-import"/>
                         </graphic>
+
+                        <tooltip>
+                            <Tooltip text="Import book library"/>
+                        </tooltip>
                     </Button>
                     <Button focusTraversable="false"
                             onAction="#handleExport">
                         <graphic>
                             <FontIcon iconLiteral="fas-file-export"/>
                         </graphic>
+
+                        <tooltip>
+                            <Tooltip text="Export book library"/>
+                        </tooltip>
                     </Button>
                 </ToolBar>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <Label text=" ">
+                <Label>
                     <graphic>
                         <FontIcon iconLiteral="fas-search"/>
                     </graphic>
                 </Label>
                 <TextField fx:id="searchTextField"
                            styleClass="search-bar"
+                           promptText="Search"
                            focusTraversable="false"
                            onKeyTyped="#handleSearch"/>
             </HBox>
@@ -81,20 +98,52 @@
 
                 <columns>
 
-                    <TableColumn fx:id="selectColumn"/>
+                    <TableColumn fx:id="selectColumn"
+                                 prefWidth="20"
+                                 reorderable="false"
+                                 sortable="false"
+                                 resizable="false"/>
 
                     <TableColumn fx:id="nameColumn"
-                                  text="Book name:"/>
+                                 prefWidth="520"
+                                 reorderable="false"
+                                 resizable="false"
+                                 text="Book name:"/>
 
-                    <TableColumn fx:id="levelOneColumn" text="Part 1"/>
+                    <TableColumn fx:id="levelOneColumn"
+                                 prefWidth="50"
+                                 reorderable="false"
+                                 resizable="false"
+                                 sortable="false"
+                                 text="Part 1"/>
 
-                    <TableColumn fx:id="levelTwoColumn" text="Part 2"/>
+                    <TableColumn fx:id="levelTwoColumn"
+                                 prefWidth="50"
+                                 reorderable="false"
+                                 resizable="false"
+                                 sortable="false"
+                                 text="Part 2"/>
 
-                    <TableColumn fx:id="levelThreeColumn" text="Part 3"/>
+                    <TableColumn fx:id="levelThreeColumn"
+                                 prefWidth="50"
+                                 reorderable="false"
+                                 resizable="false"
+                                 sortable="false"
+                                 text="Part 3"/>
 
-                    <TableColumn fx:id="levelFourColumn" text="Part 4"/>
+                    <TableColumn fx:id="levelFourColumn"
+                                 prefWidth="50"
+                                 reorderable="false"
+                                 resizable="false"
+                                 sortable="false"
+                                 text="Part 4"/>
 
-                    <TableColumn fx:id="levelFiveColumn" text="Part 5"/>
+                    <TableColumn fx:id="levelFiveColumn"
+                                 prefWidth="50"
+                                 reorderable="false"
+                                 resizable="false"
+                                 sortable="false"
+                                 text="Part 5"/>
 
                 </columns>
 

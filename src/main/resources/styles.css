@@ -1,6 +1,6 @@
 .root {
-    -fx-main-color: #44475a;
-    -fx-secondary-color: #6272a4;
+    -fx-main-color: #282a36;
+    -fx-secondary-color: #44475a;
     -fx-secondary-hover-color: #282a36;
     -fx-font-color: #f8f8f2;
     -fx-accent-color: #bd93f9;
@@ -35,7 +35,7 @@
 }
 
 .main {
-    -fx-padding: 5px;
+/*    -fx-padding: 5px;*/
 }
 
 .toolbox {
@@ -60,7 +60,6 @@
 
 .search-bar {
     -fx-background-color: -fx-secondary-color;
-    -fx-font-weight: bold;
 
     -fx-border-width: 2px;
     -fx-border-style: solid;
@@ -78,10 +77,13 @@
     -fx-background-color: transparent;
 }
 
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
 .table-view .column-header-background,
 .table-view .column-header {
     -fx-background-color: -fx-secondary-color;
-
     -fx-border-color: transparent;
 }
 
@@ -89,13 +91,15 @@
     -fx-padding: 5px;
 
     -fx-text-fill: -fx-font-color;
+
     -fx-font-size: 0.8em;
-    -fx-alignment: CENTER-LEFT;
 }
 
 .table-view .table-column {
     -fx-border-width: 0 0 1px;
     -fx-border-color: -fx-secondary-color;
+
+    -fx-alignment: CENTER;
 }
 
 .table-view .table-column-cell {
@@ -103,12 +107,13 @@
 }
 
 .table-view .table-row-cell {
-    -fx-padding: 5px;
-
     -fx-background-color: transparent;
+    -fx-padding: 5px;
 }
 
 .table-view .table-cell {
+    -fx-padding: 5px;
+
     -fx-text-fill: -fx-font-color;
 }
 
@@ -116,3 +121,57 @@
     -fx-border-width: 0;
 }
 
+.check-box {
+    -fx-text-fill: -fx-font-color;
+    -fx-font-size: 14px;
+}
+
+.check-box .box {
+    -fx-background-color: -fx-secondary-color;
+    -fx-border-color: -fx-accent-color;
+
+    -fx-background-radius: 4px;
+
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+
+    -fx-pref-width: 20;
+    -fx-pref-height: 20;
+}
+
+.check-box .box:hover {
+    -fx-background-color: -fx-accent-color;
+
+    -fx-cursor: hand;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -fx-accent-color;
+    -fx-border-color: -fx-accent-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -fx-font-color;
+    -fx-shape: "M1,5 L4,8 L9,1 L11,3 L4,10 L0,6 Z";
+    -fx-scale-shape: false;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.thumb {
+    -fx-background-color: -fx-accent-color;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: transparent;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+}

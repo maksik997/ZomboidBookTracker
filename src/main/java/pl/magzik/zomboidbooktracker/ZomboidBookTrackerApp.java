@@ -31,6 +31,7 @@ public class ZomboidBookTrackerApp extends Application {
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        
         ((Controller) loader.getController()).setStage(stage);
 
         URL stylesUrl = getClass().getResource("/styles.css");
@@ -38,6 +39,7 @@ public class ZomboidBookTrackerApp extends Application {
         scene.getStylesheets().add(stylesUrl.toExternalForm());
 
         stage.setTitle("Zomboid Book Tracker");
+        stage.setResizable(false);
         stage.show();
         stage.setOnCloseRequest(e -> {
             Platform.exit();

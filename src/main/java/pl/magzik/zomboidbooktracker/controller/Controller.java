@@ -30,9 +30,9 @@ public class Controller {
         alert.showAndWait();
     }
 
-    protected String showInputDialog(String title, String header, String context) {
+    protected String showInputDialog(String header, String context) {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(title);
+        dialog.setTitle("Input:");
         dialog.setHeaderText(header);
         dialog.setContentText(context);
         return dialog.showAndWait().orElse("");
