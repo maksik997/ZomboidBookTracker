@@ -1,3 +1,9 @@
+/* TODO:
+    - Logging,
+    - Maybe some code cleanup here and there.,
+    - JavaDoc.
+*/
+
 package pl.magzik.zomboidbooktracker;
 
 import javafx.application.Application;
@@ -31,7 +37,7 @@ public class ZomboidBookTrackerApp extends Application {
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        
+
         ((Controller) loader.getController()).setStage(stage);
 
         URL stylesUrl = getClass().getResource("/styles.css");

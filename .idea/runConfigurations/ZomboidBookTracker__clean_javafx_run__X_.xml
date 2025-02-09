@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ZomboidBookTracker" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+  <configuration default="false" name="ZomboidBookTracker [clean,javafx:run,-X]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -13,6 +13,7 @@
             <list>
               <option value="clean" />
               <option value="javafx:run" />
+              <option value="-X" />
             </list>
           </option>
           <option name="multimoduleDir" />
