@@ -5,6 +5,8 @@ allowing them to track their progress in collecting and reading skill books.
 With this tool, you can easily monitor which books you already own and which ones you still need, 
 making skill progression more efficient.  
 
+![](images/zbt.png)
+
 ## Features:
 
 - **Book Tracking**: Mark books as owned or missing to keep track of your collection.  
